@@ -12,11 +12,15 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/") {
         name = "papermc-repo"
     }
+    flatDir {
+        dirs("libs")
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     compileOnly("dev.aurelium:auraskills-api-bukkit:2.2.4")
+    implementation(":LevelledMobs-4.4.0.b137")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 

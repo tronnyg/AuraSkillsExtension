@@ -288,3 +288,8 @@
 /run/world_nether/DIM-1/data/world_border.dat
 /run/world_the_end/DIM1/data/world_border.dat
 /run/plugins/AuraSkills/xp_requirements.yml
+/libs/
+/run/plugins/LevelledMobs-4.4.0.b137.jar
+/run/
+/.kotlin/
+/.idea/
