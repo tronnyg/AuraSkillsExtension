@@ -1,14 +1,15 @@
 package com.tronnyg.auraSkillsExtension
 
-import com.tronnyg.auraSkillsExtension.levelers.BonemealEventLeveler
-import com.tronnyg.auraSkillsExtension.levelers.TillingLeveler
+import com.tronnyg.auraSkillsExtension.levelers.FarmingLeveler
 import com.tronnyg.auraSkillsExtension.sources.BonemealSource
+import com.tronnyg.auraSkillsExtension.sources.SeedPlantingSource
 import com.tronnyg.auraSkillsExtension.sources.TillingSource
 import dev.aurelium.auraskills.api.AuraSkillsApi
 import dev.aurelium.auraskills.api.config.ConfigNode
 import dev.aurelium.auraskills.api.source.SourceContext
 import dev.aurelium.auraskills.api.source.SourceType
 import dev.aurelium.auraskills.api.source.XpSourceParser
+import org.bukkit.Material
 import org.bukkit.plugin.java.JavaPlugin
 
 
@@ -27,9 +28,6 @@ class AuraSkillsExtension : JavaPlugin() {
                 TillingSource(context!!.parseValues(source), multiplier)
             }
         )
-        val tillingLeveler = TillingLeveler(aura, tilling)
-        server.pluginManager.registerEvents(tillingLeveler, this)
-
         val bonemealevent: SourceType  = registry.registerSourceType(
             "bonemealevent",
             XpSourceParser { source: ConfigNode?, context: SourceContext? ->
@@ -37,8 +35,20 @@ class AuraSkillsExtension : JavaPlugin() {
                 BonemealSource(context!!.parseValues(source), multiplier)
             }
         )
-        val bonemealEventLeveler = BonemealEventLeveler(aura, bonemealevent)
-        server.pluginManager.registerEvents(bonemealEventLeveler, this)
+
+        val seedPlantType: SourceType = registry.registerSourceType(
+            "seedplant",
+            XpSourceParser { source, context ->
+                val seedMaterial = Material.matchMaterial(source!!.node("seed").string!!)
+                    ?: error("Invalid seed material: ${source.node("seed").string}")
+                SeedPlantingSource(context!!.parseValues(source), seedMaterial, source.node("multiplier").getDouble(1.0))
+
+            }
+        )
+
+        // Register event listeners
+        val farmingLeveler = FarmingLeveler(aura, tilling, bonemealevent, seedPlantType)
+        server.pluginManager.registerEvents(farmingLeveler, this)
     }
 
     override fun onDisable() {
