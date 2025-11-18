@@ -1,0 +1,5 @@
+name: AuraSkillsExtension
+version: '1.0'
+main: com.tronnyg.auraSkillsExtension.AuraSkillsExtension
+api-version: '1.21'
+depend: [AuraSkills]
